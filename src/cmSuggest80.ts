@@ -12,7 +12,7 @@ export class CM80CompletionItemProvider implements CompletionItemProvider {
     private compiler = getCompiler();
 
     constructor() { 
-        console.log(`Starting CM8.0 Suggestion Provider...`)
+        console.log(`Starting CM8.0 Suggestion Provider...`);
     }
 
     public provideCompletionItems(document: TextDocument, position: Position, token: CancellationToken): Thenable<CompletionList> {
