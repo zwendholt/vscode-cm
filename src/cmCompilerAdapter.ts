@@ -212,6 +212,104 @@ export class cmCompilerAdapter {
             this.channel.clear();
         }
     }
+
+
+    public selectionToComment() {
+        const vscode = require('vscode');
+        const editor = vscode.window.activeTextEditor;
+        if (!editor) {
+            return 'Editor is not opening.';
+        }
+        const document = editor.document;
+        const selection = editor.selection;
+        const text = document.getText(selection);
+        const position = editor.selection.active;
+        const textLine = document.lineAt(position).text;
+        const whiteSpace = textLine.slice(0, textLine.search(/\S|$/));
+        var usernameProcess = require('child_process')
+        var dateProcess = require('child_process');
+        var username = "Default";
+        var date = "";
+        
+        usernameProcess.exec('git config user.name', (err, stdout, stderr) => {
+            if (stdout) {
+                username = stdout;
+                username = username.replace("\n", "");
+            } 
+        });
+        dateProcess.exec('powershell date', (err, stdout, stderr) => {
+            if (stdout) {
+                date = stdout;
+                date = date.replace("\r\n", "");
+                date = date.replace("\r\n\r\n\r\n", "");
+            }
+            
+            editor.edit(editBuilder => {
+                editBuilder.replace(selection, 
+                `${whiteSpace}/* CUT THIS OUT ${date} ${username}\r${text}\r${whiteSpace}* CUT THIS OUT ${username}*/`);
+            });
+        });
+    }
+
+    public titleComment() {
+        const vscode = require('vscode');
+        const editor = vscode.window.activeTextEditor;
+        if (!editor) {
+            // Return an error message if necessary.
+            return 'Editor is not opening.';
+        }
+        const document = editor.document;
+        const selection = editor.selection;
+        const text = document.getText(selection);
+    
+        const position = editor.selection.active;
+        const textLine = document.lineAt(position).text;
+        const whiteSpace = textLine.slice(0, textLine.search(/\S|$/));
+        
+        editor.edit(editBuilder => {
+            // To surround a selected text in double quotes(Multi selection is not supported).
+            editBuilder.replace(selection, 
+            `/***********************************************************************\n${whiteSpace} * ${text}\n${whiteSpace} ***********************************************************************/`);
+        });
+        var newPosition = position.with(position.line + 1, textLine.length + 3);
+        var newSelection = new vscode.Selection(newPosition, newPosition);
+        editor.selection = newSelection;
+    }
+
+    public functionComment() {
+        const vscode = require('vscode');
+        const editor = vscode.window.activeTextEditor;
+        if (!editor) {
+            // Return an error message if necessary.
+            return 'Editor is not opening.';
+        }
+        const document = editor.document;
+        const selection = editor.selection;
+        const text = document.getText(selection);
+    
+        const position = editor.selection.active;
+        const textLine = document.lineAt(position).text;
+        const whiteSpace = textLine.slice(0, textLine.search(/\S|$/));
+        
+        editor.edit(editBuilder => {
+            // To surround a selected text in double quotes(Multi selection is not supported).
+            editBuilder.replace(selection, 
+            `/**\n${whiteSpace} * ${text}\n${whiteSpace} */`);
+        });
+        var newPosition = position.with(position.line + 1, textLine.length + 3);
+        var newSelection = new vscode.Selection(newPosition, newPosition);
+        editor.selection = newSelection;
+    }
+
+    public emacsToVscodeTabs() {
+        const vscode = require('vscode');
+        const editor = vscode.window.activeTextEditor;
+        editor.options.insertSpaces = true;
+        editor.options.tabSize = 8;
+        vscode.commands.executeCommand(`editor.action.indentationToSpaces`);
+        editor.options.tabSize = 4;
+        editor.options.insertSpaces = true;
+    }
 }
 
 export interface CodeStatement {

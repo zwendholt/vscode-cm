@@ -160,6 +160,42 @@
         "title": "Overrides",
         "description": "Go to the method the current method overrides",
         "category": "CM"
+      },
+      {
+        "command": "cm.commentSelection",
+        "title": "Comment Selection",
+        "description": "Comments out highlighted text.",
+        "category": "CM"
+      },
+      {
+          "command": "cm.titleComment",
+          "title": "Title Comment",
+          "description": "Makes a Title Comment",
+          "category": "CM"
+      },
+      {
+          "command": "cm.functionComment",
+          "title": "Function Comment",
+          "description": "Makes a Function Comment",
+          "category": "CM"
+      },
+      {
+          "command": "cm.emacsToVscodeTab",
+          "title": "Convert Emacs Formatting to VSCode Formatting",
+          "description": "Fixes the issue where vscode can only handle one indentation style. Emacs actually uses 2 different styles.",
+          "category": "CM"
+      },
+      {
+          "command": "cm.getGitUsername",
+          "title": "Git Username",
+          "description": "Get the Git username",
+          "category": "CM"
+      },
+      {
+          "command": "cm.date",
+          "title": "Get the date",
+          "description": "Get the date",
+          "category": "CM"
       }
     ],
     "configuration": {
@@ -228,7 +264,37 @@
         "command": "cm.loadall",
         "key": "ctrl+alt+y",
         "when": "editorTextFocus"
-      }
+      },
+      {
+        "command": "cm.commentSelection",
+        "key": "ctrl+alt+c",
+        "when": "editorTextFocus"
+    },
+    {
+        "command": "cm.titleComment",
+        "key": "ctrl+alt+j",
+        "when": "editorTextFocus"
+    },
+    {
+        "command": "cm.functionComment",
+        "key": "ctrl+alt+k",
+        "when": "editorTextFocus"
+    },
+    {
+        "command": "cm.start",
+        "key": "alt+p",
+        "when": "editorTextFocus"
+    },
+    {
+        "command": "cm.stopcm",
+        "key": "alt+o",
+        "when": "editorTextFocus"
+    },
+    {
+        "command": "cm.emacsToVscodeTab",
+        "key": "ctrl+alt+f",
+        "when": "editorTextFocus"
+    }
     ],
     "snippets": [
       {
