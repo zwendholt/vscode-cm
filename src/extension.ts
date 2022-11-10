@@ -104,6 +104,8 @@ export function activate(context: ExtensionContext) {
 
     // createFileOpenWatcher();
     createRsSaveWatcher();
+    createCmWatcher();
+    createRsWatcher();
     
     // subscriptions
     disposables.push(languages.registerDefinitionProvider(CM_MODE, new CMDefinitionProvider()));
