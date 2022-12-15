@@ -2,6 +2,7 @@
 
 import vscode = require('vscode');
 import { Uri } from 'vscode';
+import { strict } from 'assert';
 var fs = require('fs'),
     path = require('path');
 
@@ -294,7 +295,6 @@ export class cmUtils {
 
    END OF CETSC
 */
-
 package {Package};
 
 public class {Class} {
@@ -333,8 +333,11 @@ public class {Class} {
             }
             vscode.window.showTextDocument( doc )
                 .then( (editor) => {
+                    let classSubString = uri.path.substring( uri.path.lastIndexOf( '/' ) + 1, uri.path.lastIndexOf( '.' ) );
+                    classSubString = classSubString.charAt(0).toUpperCase() + classSubString.slice(1);
+                    
                     editor.edit( (edit) => {
-                        edit.insert( new vscode.Position( 0, 0 ), copy.replace( "{Package}", nameSpace ).replace( "{Class}", uri.path.substring( uri.path.lastIndexOf( '/' ) + 1, uri.path.lastIndexOf( '.' ) ) ) );
+                        edit.insert( new vscode.Position( 0, 0 ), copy.replace( "{Package}", nameSpace ).replace( "{Class}", classSubString) );
                     } )
                     .then( (res) => {
                         const fileStart = new vscode.Position( 0, 0 );
