@@ -310,6 +310,10 @@ export class cmCompilerAdapter {
         editor.options.tabSize = 4;
         editor.options.insertSpaces = true;
     }
+
+    public writeStringToOutput(inputString:string) {        
+        this.channel.write(inputString, true);
+    }
 }
 
 export interface CodeStatement {

@@ -2,13 +2,18 @@
 
 import { cmCompilerAdapter } from './cmCompilerAdapter';
 import { cmConfig } from './cmConfig';
+import * as vscode from 'vscode';
+import {exec} from 'child_process';
 
 const fs = require('fs');
 var didLoadScripts = false;
 var scriptPackage = "";
 var scriptFuncs: string[] = [];
+var ofsExtensions: Promise<string[]> = getAllOfsExtensions();
 
 import { commands, Disposable, Position, Range, Selection, TextDocument, TextEditor, Uri, window, workspace, TextEditorRevealType } from 'vscode';
+
+
 
 export function registerCommands( compiler: cmCompilerAdapter ) {
     let d1 = commands.registerCommand( "cm.start", () => compiler.start() );
@@ -150,7 +155,19 @@ export function registerCommands( compiler: cmCompilerAdapter ) {
         compiler.emacsToVscodeTabs();
     });
 
-    return Disposable.from( d1, d2, d3, d4, d5, d6, d7, d8, d9, d10, d11, d12, d14, d15, d16, scripts, d20, d21, d22, selectionToComment, addTitleComment, addFunctionComment, emacsToVscodeTab);
+    let increaseVersion = commands.registerCommand("cm.increaseVersion", increaseVersionCall);
+    
+    let buildRelease = commands.registerCommand("cm.buildRelease", () => {
+        buildReleaseCall(compiler);
+    } );
+
+    let uploadExtensionCommand = commands.registerCommand("cm.uploadExtension", () => {
+        uploadExtension(compiler);
+    });
+
+    let zachTest = commands.registerCommand("cm.zachTestCommand", zachTestCommand);
+
+    return Disposable.from( d1, d2, d3, d4, d5, d6, d7, d8, d9, d10, d11, d12, d14, d15, d16, scripts, d20, d21, d22, selectionToComment, addTitleComment, addFunctionComment, emacsToVscodeTab, increaseVersion, buildRelease, uploadExtensionCommand, zachTest);
 }
     
     let d99 = commands.registerCommand( "cm.Test", () => {
@@ -162,6 +179,173 @@ function getPosition( editor: TextEditor ): Number {
     let offset = editor.document.offsetAt( position ) + ( 1 - position.line ); // emacs is 1 based, and it treats line end as 1 character not 2;
     return offset;
 }
+
+
+function increaseVersionCall() {
+    exec('cop setversions version=nextRevision', { cwd: vscode.workspace.rootPath },(error, stdout, stderr) => {
+      if (error) {
+        console.error(`error increasing version : ${error}`);
+        return;
+      }
+      console.log(`stdout: ${stdout}`);
+      console.error(`stderr: ${stderr}`);
+    });
+}
+
+
+function buildReleaseCall(compiler:cmCompilerAdapter) {
+    compiler.writeStringToOutput("\nStarting The Build Release Process\n\n");
+    var child = exec('cop clean', { cwd: vscode.workspace.rootPath },(error, stdout, stderr) => {
+      if (error) {
+        compiler.writeStringToOutput(`error when trying to clean : ${error}`);
+        return;
+      }
+      ofsExtensions = getAllOfsExtensions();
+      compiler.writeStringToOutput("\n\nStarting Repair Process\n\n");
+      buildRepair(compiler);
+    });
+
+    child.stdout.on('data', data => compiler.writeStringToOutput(data));
+    child.stderr.on('data', data => compiler.writeStringToOutput(data));
+}
+
+
+function buildRepair(compiler:cmCompilerAdapter) {
+
+    var child = exec('cop repair', { cwd: vscode.workspace.rootPath },(error, stdout, stderr) => {
+
+      if (error) {
+        compiler.writeStringToOutput(`error when trying to repair : ${error}`);
+        return;
+      }
+      compiler.writeStringToOutput("\n\nStarting build process\n\n");
+      buildExtension(compiler);
+    });
+    child.stdout.on('data', data => compiler.writeStringToOutput(data));
+    child.stderr.on('data', data => compiler.writeStringToOutput(data));
+}
+
+
+function buildExtension(compiler:cmCompilerAdapter) {
+    
+    var child = exec('cop make [ofs]', { cwd: vscode.workspace.rootPath },(error, stdout, stderr) => {
+        if (error) {
+            compiler.writeStringToOutput(`error when trying to make the extensions : ${error}`);
+            return;
+        }
+        compiler.writeStringToOutput("\n\nFinished making build");
+
+        vscode.window.showInformationMessage("Do you want to release the build?", "Yes", "No").then((selection) => {
+            if (selection === "Yes") {
+                uploadExtension(compiler);
+            } else {                
+                return;
+            }
+        });
+    });
+    child.stdout.on('data', data => compiler.writeStringToOutput(data));
+    child.stderr.on('data', data => compiler.writeStringToOutput(data));
+}
+
+
+async function uploadExtension(compiler:cmCompilerAdapter) {
+    compiler.writeStringToOutput("\n\nStarting Upload Process\n\n");
+
+
+    //! might want to look into actually updating this as well. 
+    const options: Promise<string[]> = ofsExtensions;
+    
+    // Let the user select the extensions that they want to release for this build.
+    const selectedExtensions = await vscode.window.showQuickPick(options, {
+        placeHolder: "Hello. Please select the extensions that you want to release.",
+        canPickMany: true
+    }).then(selection => {
+
+        // Enter the name of the build.
+        vscode.window.showInputBox(
+        {
+            placeHolder: "Please Enter a name for the release."
+        }
+        ).then(extensionName => {
+            var extensionString = extensionUploadStringFormatter(selection);
+            var child = exec(`cop upload ${extensionString} --uploadname=[${extensionName}]`, { cwd: vscode.workspace.rootPath },(error, stdout, stderr) => {
+                if (error) {
+                    compiler.writeStringToOutput(`error when trying to make the extensions : ${error}`);
+                    return;
+                }
+                compiler.writeStringToOutput("\n\nFinished making build");
+            });
+            child.stdout.on('data', data => compiler.writeStringToOutput(data));
+            child.stderr.on('data', data => compiler.writeStringToOutput(data));
+        });
+    }) ;
+}
+
+
+function extensionUploadStringFormatter(extensionArray: string[]) :string {
+    var outputString = "";
+    for (const extension in extensionArray) {
+        outputString += (extensionArray[extension] + " ");
+    }    
+    return outputString;
+}
+
+function zachTestCommand(){
+    
+    
+}
+
+
+function asyncExtensionCollection(): Promise<string> {
+    return new Promise(async(resolve, rejects) => {
+        try {
+            const child = exec('cop list extensions', {cwd: vscode.workspace.rootPath}, (error, stdout, stderr) => {
+                
+                if (error) {
+                    console.log("woopsy");
+                    return;
+                }
+                if (stdout.length === 0) {
+                    rejects("I didn't find anything for the extension");
+                } else {
+                    resolve(stdout); 
+                }
+                        
+            });
+        } catch(err) {}
+    });
+
+}
+
+
+//! if we decide to make a merge for this, change it to use just "custom."  instead of custom.ofs.
+async function getAllOfsExtensions() : Promise<string[]> {
+
+    let matches:string[] = [];
+    //! If we decide to make a merge on this. 
+    const ofsRegex = new RegExp("\\bcustom\\.ofs\\.\\w*\\b", "g");
+
+    
+    return new Promise(async (resolve, reject) => {
+        try {
+            await asyncExtensionCollection().then(result => {                
+                for (let match of result.matchAll(ofsRegex)){            
+                    matches.push(match[0]);
+                }
+                if (matches.length === 0) {
+                    reject("couldn't find any extensions");
+                } else {
+                    resolve(matches);
+                }
+            });
+        }
+        catch(err) {
+            reject("couldn't find any extensions");
+        }
+        
+    });
+}
+
 
 function getUserScripts(): Thenable<string[]> {
     if ( scriptFuncs.length > 0 ) {

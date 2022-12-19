@@ -196,6 +196,30 @@
           "title": "Get the date",
           "description": "Get the date",
           "category": "CM"
+      },
+      {
+        "command": "cm.increaseVersion",
+        "title": "Increase Version",
+        "description": "Increase the version of extensions",
+        "category": "CM"
+      },
+      {
+        "command": "cm.buildRelease",
+        "title": "Build Release",
+        "description":  "Build a new Release",
+        "category": "CM"
+      },
+      {
+        "command": "cm.zachTestCommand",
+        "title": "Zach Test Command",
+        "description": "Zach Test command",
+        "category": "CM"
+      }, 
+      {
+        "command": "cm.uploadExtension",
+        "title": "Upload CET Extension",
+        "description": "Upload CET Extension",
+        "category": "CM"
       }
     ],
     "configuration": {
