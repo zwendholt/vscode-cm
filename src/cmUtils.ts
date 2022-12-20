@@ -3,6 +3,8 @@
 import vscode = require('vscode');
 import { Uri } from 'vscode';
 import { strict } from 'assert';
+import { chooseSkeletonCodeType, defaultSkeletonCode } from './cmClassConstructors';
+import { cmConfig } from './cmConfig';
 var fs = require('fs'),
     path = require('path');
 
@@ -297,10 +299,7 @@ export class cmUtils {
 */
 package {Package};
 
-public class {Class} {
-    public constructor() {
-    }   
-}`;
+`;
         var pkg = vscode.workspace.asRelativePath( uri, false ).replace(/\\/g, '/');
         
         pkg = pkg.substring( 0, pkg.lastIndexOf( '/' ) ).replace( /\//g, '.' );
@@ -333,29 +332,12 @@ public class {Class} {
             }
             vscode.window.showTextDocument( doc )
                 .then( (editor) => {
-                    let classSubString = uri.path.substring( uri.path.lastIndexOf( '/' ) + 1, uri.path.lastIndexOf( '.' ) );
-                    classSubString = classSubString.charAt(0).toUpperCase() + classSubString.slice(1);
-                    
-                    editor.edit( (edit) => {
-                        edit.insert( new vscode.Position( 0, 0 ), copy.replace( "{Package}", nameSpace ).replace( "{Class}", classSubString) );
-                    } )
-                    .then( (res) => {
-                        const fileStart = new vscode.Position( 0, 0 );
-                        editor.selection = new vscode.Selection(fileStart, fileStart);
-                    })
-                        // return vscode.commands.executeCommand( "editor.fold" )
-                    .then( (res) => {
-                        const newPosition = new vscode.Position( 39, 4 );
-                        const newSelection = new vscode.Selection(newPosition, newPosition);
-                        editor.selection = newSelection;
-                        
-                        editor.revealRange( editor.selection, vscode.TextEditorRevealType.InCenter );
-                        
-                        doc.save();  
-                                
-                            // });
-                    })                    
-                } )
+                    if (cmConfig.useSkeletonCodeOnNewFile()) {
+                        chooseSkeletonCodeType(uri, editor, nameSpace, doc, copy);
+                    } else {
+                        defaultSkeletonCode(uri, editor, nameSpace, doc, copy);
+                    }  
+                });
         });
     }
 

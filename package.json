@@ -246,6 +246,11 @@
           "default": false,
           "description": "Auto clears the CM Output window each time a build/run is is done."
         },
+        "cm.fileCreationSkeletonCode": {
+            "type": "boolean",
+            "default": true,
+            "description": "Allows skeleton code to be added to newly made files."
+        },
         "cm.rsSaveWatch": {
           "type": "boolean",
           "default": true,

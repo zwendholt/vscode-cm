@@ -88,6 +88,14 @@ export class cmConfig {
         }
         return useNewSyntax;
     }
+
+    static useSkeletonCodeOnNewFile(): Boolean {
+        let useSkeletonCode = this.getConfig()["fileCreationSkeletonCode"];
+        if (typeof useSkeletonCode !== "boolean") {
+            useSkeletonCode = false;
+        }
+        return useSkeletonCode;
+    }
     
     static emacsClientExe() {
         return this.getConfig()["emacsclientexe"];
