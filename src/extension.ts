@@ -73,6 +73,7 @@ export function activate(context: ExtensionContext) {
     setupConfigListener( context );
     const disposables: Disposable[] = [];
     
+    
     console.log("--STARTING CM EXTENSION--");
 
     // console.log(cmConfig.currentWorkspace());
