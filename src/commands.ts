@@ -12,6 +12,7 @@ var scriptFuncs: string[] = [];
 var ofsExtensions: Promise<string[]> = getAllOfsExtensions();
 
 import { commands, Disposable, Position, Range, Selection, TextDocument, TextEditor, Uri, window, workspace, TextEditorRevealType } from 'vscode';
+import { stderr } from 'process';
 
 
 
@@ -155,7 +156,9 @@ export function registerCommands( compiler: cmCompilerAdapter ) {
         compiler.emacsToVscodeTabs();
     });
 
-    let increaseVersion = commands.registerCommand("cm.increaseVersion", increaseVersionCall);
+    let increaseVersion = commands.registerCommand("cm.increaseVersion",() => {
+        increaseVersionCall(compiler);
+    } );
     
     let buildRelease = commands.registerCommand("cm.buildRelease", () => {
         buildReleaseCall(compiler);
@@ -165,9 +168,11 @@ export function registerCommands( compiler: cmCompilerAdapter ) {
         uploadExtension(compiler);
     });
 
-    let zachTest = commands.registerCommand("cm.zachTestCommand", zachTestCommand);
+    let openBuildCentralGUICommand = commands.registerCommand("cm.openBuildCentralGUI", () => {
+        openBuildCentralGUI(compiler);
+    });
 
-    return Disposable.from( d1, d2, d3, d4, d5, d6, d7, d8, d9, d10, d11, d12, d14, d15, d16, scripts, d20, d21, d22, selectionToComment, addTitleComment, addFunctionComment, emacsToVscodeTab, increaseVersion, buildRelease, uploadExtensionCommand, zachTest);
+    return Disposable.from( d1, d2, d3, d4, d5, d6, d7, d8, d9, d10, d11, d12, d14, d15, d16, scripts, d20, d21, d22, selectionToComment, addTitleComment, addFunctionComment, emacsToVscodeTab, increaseVersion, buildRelease, uploadExtensionCommand, openBuildCentralGUICommand);
 }
     
     let d99 = commands.registerCommand( "cm.Test", () => {
@@ -181,15 +186,46 @@ function getPosition( editor: TextEditor ): Number {
 }
 
 
-function increaseVersionCall() {
-    exec('cop setversions version=nextRevision', { cwd: vscode.workspace.rootPath },(error, stdout, stderr) => {
+function increaseVersionCall(compiler:cmCompilerAdapter) {
+    compiler.writeStringToOutput("\nStarting Version Increase Process\n");
+
+    //! lets make a text input box that users will use to enter the version that they want. 
+    //! figure out a way to actually do some kind of verification on what they are entering in this box. 
+    //! IE make sure it fits the version format. if it doesn't just call this thing again. 
+
+    //!version increase text box for users to set the version (vscode)
+
+    //!add a button that shows up after a release has been released. essentially ask the users if they would like to make another release,
+    //!if they say yes, just call the same function again. (this is useful for how we release 2 builds, one with impulse, and another without.
+
+
+    var child = exec('cop setversions version=nextRevision', { cwd: vscode.workspace.rootPath },(error, stdout, stderr) => {
       if (error) {
-        console.error(`error increasing version : ${error}`);
+        compiler.writeStringToOutput(`error increasing version : ${error}`);
         return;
       }
-      console.log(`stdout: ${stdout}`);
-      console.error(`stderr: ${stderr}`);
+
+      compiler.writeStringToOutput("\nFinished Version Increase Process");
     });
+
+    child.stdout.on('data', data => compiler.writeStringToOutput(data));
+    child.stderr.on('data', data => compiler.writeStringToOutput(data));
+
+}
+
+
+function openBuildCentralGUI(compiler:cmCompilerAdapter) {
+    compiler.writeStringToOutput("\nOpening the Build Central GUI\n");
+    var child = exec('cop gui build', {cwd: vscode.workspace.rootPath}, (error, stdout, stderr) => {
+        if (error) {
+            compiler.writeStringToOutput(`Error Opening BuildCenter :  ${error}`);
+            return;
+        }
+        compiler.writeStringToOutput("\nOpen GUI Command Passed");
+    });
+
+    child.stdout.on('data', data => compiler.writeStringToOutput(data));
+    child.stderr.on('data', data => compiler.writeStringToOutput(data));
 }
 
 
@@ -274,6 +310,15 @@ async function uploadExtension(compiler:cmCompilerAdapter) {
                     return;
                 }
                 compiler.writeStringToOutput("\n\nFinished making build");
+
+                //! would you like to make another release?
+                vscode.window.showInformationMessage("Would you like to release another version of the extension?", "Yes", "No").then((selection) => {
+                    if (selection === "Yes") {
+                        uploadExtension(compiler);
+                    } else {                
+                        return;
+                    }
+                });
             });
             child.stdout.on('data', data => compiler.writeStringToOutput(data));
             child.stderr.on('data', data => compiler.writeStringToOutput(data));
@@ -288,11 +333,6 @@ function extensionUploadStringFormatter(extensionArray: string[]) :string {
         outputString += (extensionArray[extension] + " ");
     }    
     return outputString;
-}
-
-function zachTestCommand(){
-    
-    
 }
 
 
