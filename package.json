@@ -20,7 +20,6 @@
     "Other"
   ],
   "activationEvents": [
-    "onLanguage:cm",
     "workspaceContains:**/*.cm"
   ],
   "main": "./dist/extension.js",
@@ -168,34 +167,34 @@
         "category": "CM"
       },
       {
-          "command": "cm.titleComment",
-          "title": "Title Comment",
-          "description": "Makes a Title Comment",
-          "category": "CM"
+        "command": "cm.titleComment",
+        "title": "Title Comment",
+        "description": "Makes a Title Comment",
+        "category": "CM"
       },
       {
-          "command": "cm.functionComment",
-          "title": "Function Comment",
-          "description": "Makes a Function Comment",
-          "category": "CM"
+        "command": "cm.functionComment",
+        "title": "Function Comment",
+        "description": "Makes a Function Comment",
+        "category": "CM"
       },
       {
-          "command": "cm.emacsToVscodeTab",
-          "title": "Convert Emacs Formatting to VSCode Formatting",
-          "description": "Fixes the issue where vscode can only handle one indentation style. Emacs actually uses 2 different styles.",
-          "category": "CM"
+        "command": "cm.emacsToVscodeTab",
+        "title": "Convert Emacs Formatting to VSCode Formatting",
+        "description": "Fixes the issue where vscode can only handle one indentation style. Emacs actually uses 2 different styles.",
+        "category": "CM"
       },
       {
-          "command": "cm.getGitUsername",
-          "title": "Git Username",
-          "description": "Get the Git username",
-          "category": "CM"
+        "command": "cm.getGitUsername",
+        "title": "Git Username",
+        "description": "Get the Git username",
+        "category": "CM"
       },
       {
-          "command": "cm.date",
-          "title": "Get the date",
-          "description": "Get the date",
-          "category": "CM"
+        "command": "cm.date",
+        "title": "Get the date",
+        "description": "Get the date",
+        "category": "CM"
       },
       {
         "command": "cm.increaseVersion",
@@ -206,16 +205,15 @@
       {
         "command": "cm.buildRelease",
         "title": "Full Build and Release",
-        "description":  "Build a new Release",
+        "description": "Build a new Release",
         "category": "CM"
       },
-      
       {
         "command": "cm.uploadExtension",
         "title": "Upload CET Extension",
         "description": "Upload CET Extension",
         "category": "CM"
-      }, 
+      },
       {
         "command": "cm.openBuildCentralGUI",
         "title": "Open Build Central GUI",
@@ -248,9 +246,9 @@
           "description": "Auto clears the CM Output window each time a build/run is is done."
         },
         "cm.fileCreationSkeletonCode": {
-            "type": "boolean",
-            "default": true,
-            "description": "Allows skeleton code to be added to newly made files."
+          "type": "boolean",
+          "default": true,
+          "description": "Allows skeleton code to be added to newly made files."
         },
         "cm.rsSaveWatch": {
           "type": "boolean",
@@ -263,54 +261,53 @@
           "description": "Runs CM 8.0+ autocomplete"
         },
         "cm.tags": {
-            "type": "array",
-            "description": "Tags that are used to determine block comments",
-            "default": [
-                {
-                    "tag": "***",
-                    "color": "#FF2D00",
-                    "strikethrough": false,
-                    "underline": false,
-                    "backgroundColor": "transparent",
-                    "bold": false,
-                    "italic": false
-                },
-                {
-                    "tag": "*",
-                    "strikethrough": false,
-                    "underline": false,
-                    "backgroundColor": "transparent",
-                    "bold": false,
-                    "italic": false
-                },
-                {
-                    "tag": "/**",
-                    "strikethrough": false,
-                    "underline": false,
-                    "backgroundColor": "transparent",
-                    "bold": false,
-                    "italic": false
-                },
-                {
-                    "tag": "!",
-					"color": "#FF2D00",
-					"strikethrough": false,
-					"underline": false,
-					"backgroundColor": "transparent",
-					"bold": false,
-					"italic": false
-                },
-                {
-                    "tag": "***",
-                    "color": "#FF2D00",
-                    "strikethrough": false,
-                    "underline": false,
-                    "backgroundColor": "transparent",
-                    "bold": false,
-                    "italic": false
-                }
-
-            ]
+          "type": "array",
+          "description": "Tags that are used to determine block comments",
+          "default": [
+            {
+              "tag": "***",
+              "color": "#FF2D00",
+              "strikethrough": false,
+              "underline": false,
+              "backgroundColor": "transparent",
+              "bold": false,
+              "italic": false
+            },
+            {
+              "tag": "*",
+              "strikethrough": false,
+              "underline": false,
+              "backgroundColor": "transparent",
+              "bold": false,
+              "italic": false
+            },
+            {
+              "tag": "/**",
+              "strikethrough": false,
+              "underline": false,
+              "backgroundColor": "transparent",
+              "bold": false,
+              "italic": false
+            },
+            {
+              "tag": "!",
+              "color": "#FF2D00",
+              "strikethrough": false,
+              "underline": false,
+              "backgroundColor": "transparent",
+              "bold": false,
+              "italic": false
+            },
+            {
+              "tag": "***",
+              "color": "#FF2D00",
+              "strikethrough": false,
+              "underline": false,
+              "backgroundColor": "transparent",
+              "bold": false,
+              "italic": false
+            }
+          ]
         }
       }
     },
@@ -349,32 +346,32 @@
         "command": "cm.commentSelection",
         "key": "ctrl+alt+c",
         "when": "editorTextFocus"
-    },
-    {
+      },
+      {
         "command": "cm.titleComment",
         "key": "ctrl+alt+j",
         "when": "editorTextFocus"
-    },
-    {
+      },
+      {
         "command": "cm.functionComment",
         "key": "ctrl+alt+k",
         "when": "editorTextFocus"
-    },
-    {
+      },
+      {
         "command": "cm.start",
         "key": "alt+p",
         "when": "editorTextFocus"
-    },
-    {
+      },
+      {
         "command": "cm.stopcm",
         "key": "alt+o",
         "when": "editorTextFocus"
-    },
-    {
+      },
+      {
         "command": "cm.emacsToVscodeTab",
         "key": "ctrl+alt+f",
         "when": "editorTextFocus"
-    }
+      }
     ],
     "snippets": [
       {
@@ -418,23 +415,22 @@
     "test": "node ./out/test/runTest.js"
   },
   "devDependencies": {
-    "@types/vscode": "^1.70.0",
-    "@types/glob": "^7.2.0",
-    "@types/mocha": "^9.1.1",
-    "@types/node": "16.x",
-    "@typescript-eslint/eslint-plugin": "^5.31.0",
-    "@typescript-eslint/parser": "^5.31.0",
-    "eslint": "^8.20.0",
-    "glob": "^8.0.3",
-    "mocha": "^10.0.0",
-    "typescript": "^4.7.4",
-    "ts-loader": "^9.3.1",
-    "webpack": "^5.74.0",
-    "webpack-cli": "^4.10.0",
-    "@vscode/test-electron": "^2.1.5"
+    "@types/glob": "^8.1.0",
+    "@types/mocha": "^10.0.1",
+    "@types/node": "18.x",
+    "@types/vscode": "^1.77.0",
+    "@typescript-eslint/eslint-plugin": "^5.58.0",
+    "@typescript-eslint/parser": "^5.58.0",
+    "@vscode/test-electron": "^2.3.0",
+    "eslint": "^8.38.0",
+    "glob": "^10.0.0",
+    "mocha": "^10.2.0",
+    "ts-loader": "^9.4.2",
+    "typescript": "^5.0.4",
+    "webpack": "^5.79.0",
+    "webpack-cli": "5.0.1"
   },
   "dependencies": {
-    "json5": "2.2.1",
-    "clang-format": "^1.0.34"
+    "json5": "2.2.3"
   }
 }
