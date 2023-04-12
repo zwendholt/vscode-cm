@@ -158,5 +158,38 @@
             "extend public $1 $2($0) : abstract {}"
         ],
         "description": "Abstract public method declaration"
+    },
+    "Part Number": {
+        "prefix": "partNum",
+        "body": [
+            "/**",
+            " * Part Number",
+            " */",
+            "public str partNumber(str dataKey=cMainData) {",
+            "\treturn \"$0\";",
+            "}"
+        ]
+    },
+    "Graphics Rotation": {
+        "prefix": "graphicsR",
+        "body": [
+            "/**",
+            " * Graphics Rotation",
+            " */",
+            "public orientation graphicsRot() {",
+            "\treturn ($1deg, $2deg, $3deg);",
+            "}"
+        ]
+    },
+    "Graphics Offset": {
+        "prefix": "graphicsO",
+        "body": [
+            "/**",
+            " * Graphics Offset",
+            " */",
+            "public str graphicsOffset() {",
+            "\treturn ($1inch, $2inch, $3inch);",
+            "}"
+        ]
     }
 }

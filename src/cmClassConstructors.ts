@@ -48,6 +48,33 @@ public class {Class} {
         return "";
     }
 
+    /***********************************************************************
+     * Domains
+     ***********************************************************************/
+
+    /**
+     * Width domain.
+     */
+    public SubSet widthDomain(bool nominal=false) {
+        return DoubleEnum(1inch);
+    }
+
+
+    /**
+     * Depth domain.
+     */
+    public SubSet depthDomain(bool nominal=false) {
+        return DoubleEnum(1inch);
+    }
+
+
+    /**
+     * Height domain.
+     */
+    public SubSet heightDomain(bool nominal=false) {  
+        return DoubleEnum(1inch);
+    }
+
 
     /***********************************************************************
      * Graphics
@@ -56,7 +83,7 @@ public class {Class} {
     /**
      * Graphics rotation.
      */
-    extend public orientation graphicsRot() {
+    public orientation graphicsRot() {
         return orientation();
     }
 
@@ -64,7 +91,7 @@ public class {Class} {
     /**
      * Graphics offset.
      */
-    extend public point graphicsOffset() {
+    public point graphicsOffset() {
         return point0;
     }
 }`;

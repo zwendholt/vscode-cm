@@ -75,7 +75,7 @@ export function registerCommands( compiler: cmCompilerAdapter ) {
 
     let d30 = commands.registerCommand( "cm.compileworkspace", () => {
         compiler.compileWorkspace();
-    })
+    });
    
     let d14 = commands.registerCommand( "cm.runexternal", (args) => {
         // this is a hook for anything to run CM Commands via "commands.executeCommand(...)"

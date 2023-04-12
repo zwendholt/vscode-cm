@@ -65,6 +65,8 @@ export class cmCompilerAdapter {
     }
     
     public start() : Thenable<boolean> {
+        console.log("start!!!");
+        
         if ( this.isStarted ) { return; }
         
         return new Promise((resolve, reject) => {
